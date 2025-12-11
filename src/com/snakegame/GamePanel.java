@@ -5,12 +5,11 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Random;
-import java.io.File;             // Import for File
-import javax.sound.sampled.*;    // Import for Sound
+import java.io.File; 
+import javax.sound.sampled.*;    
 
 public class GamePanel extends JPanel implements ActionListener {
 
-    // ... (All your existing variables remain the same) ...
     static final int SCREEN_WIDTH = 1200;
     static final int SCREEN_HEIGHT = 800;
     static final int UNIT_SIZE = 50;
@@ -36,13 +35,6 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
     }
-
-    // ... (startGame, paintComponent, draw, drawMenu, newApple, move methods are same) ...
-    // ... PASTE YOUR EXISTING METHODS HERE ...
-    
-    // I am only writing the StartGame/Paint etc to save space, 
-    // BUT DO NOT DELETE THEM from your code!
-    
     public void startGame() {
         newApple();
         running = true;
@@ -94,69 +86,52 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    // --- HERE IS THE MODIFIED METHOD ---
     public void checkApple() {
         if ((x[0] == appleX) && (y[0] == appleY)) {
             bodyParts++;
             applesEaten++;
             
-            // NEW: Play Sound!
+           
             playSound("eat.wav");
             
             newApple();
         }
     }
     
-    // --- NEW HELPER METHOD FOR SOUND ---
+
     public void playSound(String soundFileName) {
         try {
-            // Open an audio input stream.
             File soundFile = new File(soundFileName);
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
-            
-            // Get a sound clip resource.
             Clip clip = AudioSystem.getClip();
-            
-            // Open audio clip and load samples from the audio input stream.
             clip.open(audioIn);
             clip.start();
             
         } catch (Exception e) {
-            // If file is not found, we just ignore it so the game doesn't crash
             System.out.println("Error playing sound: " + e.getMessage());
         }
     }
-
-    // ... (checkCollisions, handleGameOver, drawGameOver, actionPerformed, KeyAdapter remain the same) ...
     public void checkCollisions() {
-        // Check if head collides with body
         for (int i = bodyParts; i > 0; i--) {
             if ((x[0] == x[i]) && (y[0] == y[i])) {
                 running = false;
             }
         }
-        
-        // Check if head touches left border
         if (x[0] < 0) {
             running = false;
         }
-        // Check if head touches right border
         if (x[0] > SCREEN_WIDTH) {
             running = false;
         }
-        // Check if head touches top border
         if (y[0] < 0) {
             running = false;
         }
-        // Check if head touches bottom border
         if (y[0] > SCREEN_HEIGHT) {
             running = false;
         }
 
         if (!running) {
             timer.stop();
-            
-            // NEW: Play the death sound BEFORE the popup appears
             playSound("die.wav");
             
             handleGameOver();
@@ -173,7 +148,6 @@ public class GamePanel extends JPanel implements ActionListener {
         g.setColor(Color.red);
         g.setFont(new Font("Ink Free", Font.BOLD, 70));
         g.drawString("Game Over", 400, 100);
-        // ... (rest of your drawGameOver logic)
         int yPos = 250;
         for (String s : topScores) { g.drawString(s, 350, yPos); yPos += 55; }
         g.drawString("Press SPACE to Restart", 200, 600);

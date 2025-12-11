@@ -7,8 +7,6 @@ public class GameDatabase {
     private static final String URL = "jdbc:mysql://localhost:3306/snake_game"; 
     private static final String USER = "root";
     private static final String PASSWORD = "root";
-
-    // Initialize: Connects and creates the table if it's missing
     public static void initialize() {
         String sql = "CREATE TABLE IF NOT EXISTS player_scores (" +
                 "id INT PRIMARY KEY AUTO_INCREMENT," + 
@@ -26,8 +24,6 @@ public class GameDatabase {
             e.printStackTrace();
         }
     }
-
-    // Save a player's score
     public static void saveScore(String name, int score) {
         String sql = "INSERT INTO player_scores(name, score) VALUES(?, ?)";
         
@@ -42,8 +38,6 @@ public class GameDatabase {
             e.printStackTrace();
         }
     }
-
-    // Get the Top 5 High Scores
     public static ArrayList<String> getTopScores() {
         ArrayList<String> scores = new ArrayList<>();
         String sql = "SELECT name, score FROM player_scores ORDER BY score DESC LIMIT 5";
